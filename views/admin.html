@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StackEats — Admin</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --amber: #f59e0b;
+        --amber-dark: #b45309;
+        --bg: #0d0d0d;
+        --surface: #1a1a1a;
+        --surface2: #242424;
+        --border: #2e2e2e;
+        --text: #f0ede8;
+        --muted: #888;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+      }
+      .navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+      }
+      .navbar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        color: var(--amber) !important;
+        letter-spacing: 2px;
+      }
+      .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.9rem;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--text) !important;
+      }
+      .btn-amber {
+        background: var(--amber);
+        color: #000;
+        font-weight: 500;
+        border: none;
+        border-radius: 6px;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .btn-amber:hover {
+        background: var(--amber-dark);
+        color: #fff;
+      }
+      .btn-outline {
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: transparent;
+        border-radius: 6px;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .btn-outline:hover {
+        border-color: var(--text);
+        color: var(--text);
+      }
+      .btn-danger-sm {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #f87171;
+        border-radius: 6px;
+        padding: 0.25rem 0.7rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .page-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+      h2.section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 2px;
+        color: var(--amber);
+        margin-bottom: 1.25rem;
+      }
+
+      /* ── Stat cards (Bootstrap Grid) ─────────────────────────────── */
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+      }
+      .stat-label {
+        font-size: 0.78rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+      }
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.2rem;
+        color: var(--amber);
+        line-height: 1;
+      }
+
+      /* ── Section tabs ─────────────────────────────────────────────── */
+      .admin-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1.5rem;
+      }
+      .admin-tab {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 0.6rem 1.4rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .admin-tab.active {
+        color: var(--amber);
+        border-bottom-color: var(--amber);
+      }
+
+      /* ── Menu table ───────────────────────────────────────────────── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      .data-table th {
+        text-align: left;
+        padding: 0.6rem 0.75rem;
+        color: var(--muted);
+        font-weight: 400;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table td {
+        padding: 0.75rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:hover td {
+        background: var(--surface2);
+      }
+      .avail-toggle {
+        display: inline-block;
+        width: 32px;
+        height: 18px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        vertical-align: middle;
+        position: relative;
+      }
+      .avail-toggle.on {
+        background: var(--amber);
+      }
+      .avail-toggle.off {
+        background: var(--border);
+      }
+      .avail-toggle::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.2s;
+      }
+      .avail-toggle.on::after {
+        transform: translateX(14px);
+      }
+
+      /* ── Add/Edit form ────────────────────────────────────────────── */
+      .form-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      @media (max-width: 600px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+      .form-group {
+        margin-bottom: 0.9rem;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-bottom: 0.35rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.9rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--amber);
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      /* ── Orders ───────────────────────────────────────────────────── */
+      .status-badge {
+        font-size: 0.72rem;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-weight: 500;
+        text-transform: capitalize;
+        cursor: pointer;
+      }
+      .status-pending {
+        background: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .status-confirmed {
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .status-preparing {
+        background: rgba(168, 85, 247, 0.12);
+        color: #c084fc;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+      }
+      .status-ready {
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+      .status-delivered {
+        background: rgba(34, 197, 94, 0.18);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+      .status-cancelled {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      select.status-select {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 6px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .alert-box {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: none;
+      }
+      .alert-error {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #f87171;
+      }
+      .alert-success {
+        background: rgba(34, 197, 94, 0.12);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #4ade80;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">StackEats</a>
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Menu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="admin.html">Admin</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center gap-2">
+            <span
+              style="
+                color: var(--amber);
+                font-size: 0.78rem;
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 4px;
+                padding: 2px 8px;
+              "
+              >ADMIN</span
+            >
+            <span
+              style="color: var(--muted); font-size: 0.85rem"
+              id="nav-username"
+            ></span>
+            <button class="btn-amber" onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <div class="alert-box alert-error" id="alertError"></div>
+      <div class="alert-box alert-success" id="alertSuccess"></div>
+
+      <!-- ── Stat cards (Bootstrap responsive grid) ─────────────────────── -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-label">Menu items</div>
+            <div class="stat-value" id="statItems">—</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-label">Total orders</div>
+            <div class="stat-value" id="statOrders">—</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" id="statPending">—</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value" id="statRevenue">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tabs ────────────────────────────────────────────────────────── -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="showTab('menu', this)">
+          Menu Items
+        </button>
+        <button class="admin-tab" onclick="showTab('orders', this)">
+          All Orders
+        </button>
+      </div>
+
+      <!-- ══ MENU TAB ══════════════════════════════════════════════════════ -->
+      <div id="tab-menu">
+        <!-- Add / Edit form -->
+        <div class="form-panel">
+          <h2
+            class="section-title"
+            id="formTitle"
+            style="font-size: 1.4rem; margin-bottom: 1rem"
+          >
+            Add Menu Item
+          </h2>
+          <input type="hidden" id="editId" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="f-name" placeholder="e.g. Smash Burger" />
+            </div>
+            <div class="form-group">
+              <label>Price ($)</label>
+              <input
+                type="number"
+                id="f-price"
+                placeholder="12.99"
+                step="0.01"
+                min="0"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="f-desc"
+              placeholder="Short description of the item…"
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <select id="f-cat">
+                <option value="burger">Burger</option>
+                <option value="pizza">Pizza</option>
+                <option value="sides">Sides</option>
+                <option value="drink">Drink</option>
+                <option value="dessert">Dessert</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Image URL (optional)</label>
+              <input type="text" id="f-img" placeholder="https://…" />
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap">
+            <button class="btn-amber" onclick="saveItem()">Save Item</button>
+            <button class="btn-outline" onclick="resetForm()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Menu table -->
+        <div style="overflow-x: auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="menuTableBody">
+              <tr>
+                <td
+                  colspan="5"
+                  style="color: var(--muted); padding: 1.5rem 0.75rem"
+                >
+                  Loading…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ ORDERS TAB ════════════════════════════════════════════════════ -->
+      <div id="tab-orders" style="display: none">
+        <div style="overflow-x: auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td
+                  colspan="6"
+                  style="color: var(--muted); padding: 1.5rem 0.75rem"
+                >
+                  Loading…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ── Auth guard ─────────────────────────────────────────────────────────
+      const token = localStorage.getItem("se_token");
+      const user = JSON.parse(localStorage.getItem("se_user") || "null");
+      if (!token || !user || user.role !== "admin")
+        window.location.href = "login.html";
+      document.getElementById("nav-username").textContent =
+        user?.username || "";
+
+      const authHeaders = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+      }
+
+      function showError(msg) {
+        const el = document.getElementById("alertError");
+        el.textContent = msg;
+        el.style.display = "block";
+        setTimeout(() => (el.style.display = "none"), 4000);
+      }
+      function showSuccess(msg) {
+        const el = document.getElementById("alertSuccess");
+        el.textContent = msg;
+        el.style.display = "block";
+        setTimeout(() => (el.style.display = "none"), 4000);
+      }
+
+      // ── Tabs ───────────────────────────────────────────────────────────────
+      function showTab(tab, btn) {
+        document.getElementById("tab-menu").style.display =
+          tab === "menu" ? "block" : "none";
+        document.getElementById("tab-orders").style.display =
+          tab === "orders" ? "block" : "none";
+        document
+          .querySelectorAll(".admin-tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (tab === "orders") loadOrders();
+      }
+
+      // ── Stats ──────────────────────────────────────────────────────────────
+      async function loadStats() {
+        const [mRes, oRes] = await Promise.all([
+          fetch("/api/menu", { headers: authHeaders }),
+          fetch("/api/orders", { headers: authHeaders }),
+        ]);
+        const mData = await mRes.json();
+        const oData = await oRes.json();
+        const orders = oData.orders || [];
+        const revenue = orders
+          .filter((o) => o.status !== "cancelled")
+          .reduce((s, o) => s + o.total, 0);
+        document.getElementById("statItems").textContent =
+          mData.items?.length ?? 0;
+        document.getElementById("statOrders").textContent = orders.length;
+        document.getElementById("statPending").textContent = orders.filter(
+          (o) => o.status === "pending",
+        ).length;
+        document.getElementById("statRevenue").textContent =
+          `$${revenue.toFixed(0)}`;
+      }
+
+      // ── Menu CRUD ──────────────────────────────────────────────────────────
+      async function loadMenu() {
+        const res = await fetch("/api/menu", { headers: authHeaders });
+        const data = await res.json();
+        const tbody = document.getElementById("menuTableBody");
+        if (!data.items?.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" style="color:var(--muted);padding:1rem 0.75rem">No items yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.items
+          .map(
+            (item) => `
+      <tr>
+        <td><strong>${item.name}</strong><div style="font-size:0.78rem;color:var(--muted)">${item.description || ""}</div></td>
+        <td><span style="font-size:0.78rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;text-transform:uppercase;letter-spacing:0.5px">${item.category}</span></td>
+        <td style="font-family:'Bebas Neue';font-size:1.1rem;color:var(--amber)">$${item.price.toFixed(2)}</td>
+        <td><span class="avail-toggle ${item.available ? "on" : "off"}" onclick="toggleAvail('${item.id}', ${!item.available}, this)"></span></td>
+        <td style="display:flex;gap:0.5rem;flex-wrap:wrap">
+          <button class="btn-outline" onclick='editItem(${JSON.stringify(item).replace(/'/g, "&#39;")})'>Edit</button>
+          <button class="btn-danger-sm" onclick="deleteItem('${item.id}')">Delete</button>
+        </td>
+      </tr>`,
+          )
+          .join("");
+      }
+
+      async function saveItem() {
+        const id = document.getElementById("editId").value;
+        const body = {
+          name: document.getElementById("f-name").value.trim(),
+          price: parseFloat(document.getElementById("f-price").value),
+          description: document.getElementById("f-desc").value.trim(),
+          category: document.getElementById("f-cat").value,
+          imageUrl: document.getElementById("f-img").value.trim(),
+        };
+        if (!body.name || isNaN(body.price)) {
+          showError("Name and price are required.");
+          return;
+        }
+        const method = id ? "PUT" : "POST";
+        const url = id ? `/api/menu/${id}` : "/api/menu";
+        const res = await fetch(url, {
+          method,
+          headers: authHeaders,
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error);
+          return;
+        }
+        showSuccess(id ? "Item updated." : "Item added.");
+        resetForm();
+        loadMenu();
+        loadStats();
+      }
+
+      function editItem(item) {
+        document.getElementById("editId").value = item.id;
+        document.getElementById("f-name").value = item.name;
+        document.getElementById("f-price").value = item.price;
+        document.getElementById("f-desc").value = item.description || "";
+        document.getElementById("f-cat").value = item.category;
+        document.getElementById("f-img").value = item.imageUrl || "";
+        document.getElementById("formTitle").textContent = "Edit Menu Item";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetForm() {
+        ["editId", "f-name", "f-price", "f-desc", "f-img"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("f-cat").value = "burger";
+        document.getElementById("formTitle").textContent = "Add Menu Item";
+      }
+
+      async function deleteItem(id) {
+        if (!confirm("Delete this menu item?")) return;
+        const res = await fetch(`/api/menu/${id}`, {
+          method: "DELETE",
+          headers: authHeaders,
+        });
+        if (res.ok) {
+          showSuccess("Item deleted.");
+          loadMenu();
+          loadStats();
+        } else {
+          const d = await res.json();
+          showError(d.error);
+        }
+      }
+
+      async function toggleAvail(id, available, el) {
+        const res = await fetch(`/api/menu/${id}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify({ available }),
+        });
+        if (res.ok) {
+          el.classList.toggle("on", available);
+          el.classList.toggle("off", !available);
+        }
+      }
+
+      // ── Orders ─────────────────────────────────────────────────────────────
+      async function loadOrders() {
+        const res = await fetch("/api/orders", { headers: authHeaders });
+        const data = await res.json();
+        const tbody = document.getElementById("ordersTableBody");
+        if (!data.orders?.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" style="color:var(--muted);padding:1rem 0.75rem">No orders yet.</td></tr>';
+          return;
+        }
+        const sorted = [...data.orders].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        );
+        const statuses = [
+          "pending",
+          "confirmed",
+          "preparing",
+          "ready",
+          "delivered",
+          "cancelled",
+        ];
+        tbody.innerHTML = sorted
+          .map(
+            (o) => `
+      <tr>
+        <td style="font-family:monospace;font-size:0.78rem;color:var(--muted)">#${o.id.slice(-8).toUpperCase()}</td>
+        <td style="font-size:0.82rem">${o.userId?.toString().slice(-6) || "—"}</td>
+        <td style="font-size:0.82rem;color:var(--muted)">${o.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")}</td>
+        <td style="font-family:'Bebas Neue';font-size:1.1rem;color:var(--amber)">$${o.total.toFixed(2)}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus('${o.id}', this.value)">
+            ${statuses.map((s) => `<option value="${s}" ${s === o.status ? "selected" : ""}>${s}</option>`).join("")}
+          </select>
+        </td>
+        <td style="font-size:0.78rem;color:var(--muted)">${new Date(o.createdAt).toLocaleDateString("en-CA", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</td>
+      </tr>`,
+          )
+          .join("");
+      }
+
+      async function updateStatus(id, status) {
+        const res = await fetch(`/api/orders/${id}/status`, {
+          method: "PATCH",
+          headers: authHeaders,
+          body: JSON.stringify({ status }),
+        });
+        if (res.ok) {
+          showSuccess(`Status updated to "${status}".`);
+          loadStats();
+        } else {
+          const d = await res.json();
+          showError(d.error);
+        }
+      }
+
+      // ── Boot ───────────────────────────────────────────────────────────────
+      loadMenu();
+      loadStats();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StackEats — Menu</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --amber: #f59e0b;
+        --amber-dark: #b45309;
+        --bg: #0d0d0d;
+        --surface: #1a1a1a;
+        --surface2: #242424;
+        --border: #2e2e2e;
+        --text: #f0ede8;
+        --muted: #888;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+      }
+
+      /* ── Navbar ─────────────────────────────────────────────────────── */
+      .navbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+      }
+      .navbar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        color: var(--amber) !important;
+        letter-spacing: 2px;
+      }
+      .nav-link {
+        color: var(--muted) !important;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--text) !important;
+      }
+      .btn-amber {
+        background: var(--amber);
+        color: #000;
+        font-weight: 500;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4rem 1.1rem;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+      }
+      .btn-amber:hover {
+        background: var(--amber-dark);
+        color: #fff;
+      }
+      .btn-outline-amber {
+        border: 1px solid var(--amber);
+        color: var(--amber);
+        background: transparent;
+        border-radius: 6px;
+        padding: 0.4rem 1.1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .btn-outline-amber:hover {
+        background: var(--amber);
+        color: #000;
+      }
+      #cart-btn {
+        position: relative;
+      }
+      #cart-count {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        background: var(--amber);
+        color: #000;
+        font-size: 0.65rem;
+        font-weight: 700;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+      }
+
+      /* ── Hero ───────────────────────────────────────────────────────── */
+      .hero {
+        padding: 4rem 1.5rem 2rem;
+        text-align: center;
+      }
+      .hero h1 {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(3.5rem, 10vw, 7rem);
+        color: var(--text);
+        letter-spacing: 4px;
+        line-height: 1;
+      }
+      .hero h1 span {
+        color: var(--amber);
+      }
+      .hero p {
+        color: var(--muted);
+        font-size: 1rem;
+        margin-top: 0.75rem;
+      }
+
+      /* ── Filter bar ─────────────────────────────────────────────────── */
+      .filter-bar {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1.5rem 1.5rem 0.5rem;
+      }
+      .filter-btn {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        border-radius: 20px;
+        padding: 0.35rem 1rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: var(--amber);
+        color: #000;
+        border-color: var(--amber);
+        font-weight: 500;
+      }
+
+      /* ── Grid ───────────────────────────────────────────────────────── */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.25rem;
+        padding: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* ── Card ───────────────────────────────────────────────────────── */
+      .menu-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+        cursor: pointer;
+      }
+      .menu-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--amber);
+      }
+      .menu-card .card-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        background: var(--surface2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 2.5rem;
+      }
+      .menu-card .card-body {
+        padding: 1rem;
+      }
+      .menu-card .card-title {
+        font-weight: 500;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+      }
+      .menu-card .card-desc {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-bottom: 0.75rem;
+        line-height: 1.5;
+        min-height: 2.5rem;
+      }
+      .menu-card .card-footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .menu-card .price {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        color: var(--amber);
+        letter-spacing: 1px;
+      }
+      .category-badge {
+        font-size: 0.7rem;
+        background: var(--surface2);
+        color: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .unavailable-overlay {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .unavailable-tag {
+        font-size: 0.7rem;
+        color: #ef4444;
+        font-weight: 500;
+      }
+
+      /* ── Skeleton loader ────────────────────────────────────────────── */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          var(--surface2) 25%,
+          var(--border) 50%,
+          var(--surface2) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 8px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* ── Modal ──────────────────────────────────────────────────────── */
+      .modal-content {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 14px;
+      }
+      .modal-header {
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-footer {
+        border-top: 1px solid var(--border);
+      }
+      .btn-close {
+        filter: invert(1);
+      }
+      .qty-control {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .qty-btn {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .qty-btn:hover {
+        background: var(--border);
+      }
+      #modal-qty {
+        font-size: 1.1rem;
+        font-weight: 500;
+        min-width: 24px;
+        text-align: center;
+      }
+
+      /* ── Toast ──────────────────────────────────────────────────────── */
+      .toast-container {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        z-index: 9999;
+      }
+      .toast {
+        background: var(--surface);
+        border: 1px solid var(--amber);
+        color: var(--text);
+        border-radius: 10px;
+      }
+
+      /* ── Slider ─────────────────────────────────────────────────────── */
+      .hero-slider {
+        background: var(--amber);
+        color: #000;
+        padding: 0.5rem 1.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: flex;
+        gap: 3rem;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .slider-track {
+        display: inline-flex;
+        gap: 3rem;
+        animation: slide 18s linear infinite;
+      }
+      @keyframes slide {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Navbar (Bootstrap) ──────────────────────────────────────────────── -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">StackEats</a>
+        <button
+          class="navbar-toggler border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navMenu"
+        >
+          <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Menu</a>
+            </li>
+            <li class="nav-item" id="nav-orders" style="display: none">
+              <a class="nav-link" href="orders.html">My Orders</a>
+            </li>
+            <li class="nav-item" id="nav-admin" style="display: none">
+              <a class="nav-link" href="admin.html">Admin</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center gap-2">
+            <button
+              class="btn-outline-amber"
+              id="cart-btn"
+              onclick="openCart()"
+            >
+              Cart <span id="cart-count">0</span>
+            </button>
+            <span id="nav-guest">
+              <a href="login.html" class="btn-amber">Login</a>
+            </span>
+            <span id="nav-user" style="display: none">
+              <span
+                style="color: var(--muted); font-size: 0.85rem"
+                id="nav-username"
+              ></span>
+              <button class="btn-outline-amber ms-2" onclick="logout()">
+                Logout
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── Slider (Bootstrap Carousel) ───────────────────────────────────── -->
+    <div class="hero-slider">
+      <div class="slider-track" id="sliderTrack">
+        <span>🍔 SMASH BURGERS</span><span>🍕 STONE OVEN PIZZA</span>
+        <span>🌮 STREET TACOS</span><span>🍟 LOADED FRIES</span>
+        <span>🥤 CRAFT SODAS</span><span>🍰 DAILY DESSERTS</span>
+        <span>🍔 SMASH BURGERS</span><span>🍕 STONE OVEN PIZZA</span>
+        <span>🌮 STREET TACOS</span><span>🍟 LOADED FRIES</span>
+        <span>🥤 CRAFT SODAS</span><span>🍰 DAILY DESSERTS</span>
+      </div>
+    </div>
+
+    <!-- ── Hero ───────────────────────────────────────────────────────────── -->
+    <section class="hero">
+      <h1>STACK<span>EATS</span></h1>
+      <p>Fresh, bold flavours — order online, pickup or delivery.</p>
+    </section>
+
+    <!-- ── Filter bar ─────────────────────────────────────────────────────── -->
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" onclick="filterMenu('all', this)">
+        All
+      </button>
+      <button class="filter-btn" onclick="filterMenu('burger', this)">
+        Burgers
+      </button>
+      <button class="filter-btn" onclick="filterMenu('pizza', this)">
+        Pizza
+      </button>
+      <button class="filter-btn" onclick="filterMenu('sides', this)">
+        Sides
+      </button>
+      <button class="filter-btn" onclick="filterMenu('drink', this)">
+        Drinks
+      </button>
+      <button class="filter-btn" onclick="filterMenu('dessert', this)">
+        Desserts
+      </button>
+    </div>
+
+    <!-- ── Menu grid ──────────────────────────────────────────────────────── -->
+    <div class="menu-grid" id="menuGrid">
+      <!-- Skeleton placeholders while loading -->
+      <div class="menu-card">
+        <div class="skeleton" style="height: 160px"></div>
+        <div class="card-body">
+          <div class="skeleton" style="height: 14px; margin-bottom: 8px"></div>
+          <div class="skeleton" style="height: 12px; width: 60%"></div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="skeleton" style="height: 160px"></div>
+        <div class="card-body">
+          <div class="skeleton" style="height: 14px; margin-bottom: 8px"></div>
+          <div class="skeleton" style="height: 12px; width: 60%"></div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="skeleton" style="height: 160px"></div>
+        <div class="card-body">
+          <div class="skeleton" style="height: 14px; margin-bottom: 8px"></div>
+          <div class="skeleton" style="height: 12px; width: 60%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Item Modal (Bootstrap Modal) ───────────────────────────────────── -->
+    <div class="modal fade" id="itemModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-name"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p
+              id="modal-desc"
+              style="
+                color: var(--muted);
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+              "
+            ></p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span
+                style="
+                  font-family: &quot;Bebas Neue&quot;;
+                  font-size: 1.8rem;
+                  color: var(--amber);
+                "
+                id="modal-price"
+              ></span>
+              <span class="category-badge" id="modal-cat"></span>
+            </div>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeQty(-1)">−</button>
+              <span id="modal-qty">1</span>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+              <span
+                style="
+                  color: var(--muted);
+                  font-size: 0.85rem;
+                  margin-left: auto;
+                "
+                id="modal-subtotal"
+              ></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-amber w-100" onclick="addToCart()">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Toast ──────────────────────────────────────────────────────────── -->
+    <div class="toast-container">
+      <div id="liveToast" class="toast align-items-center" role="alert">
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg">Added to cart!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ── State ──────────────────────────────────────────────────────────────
+      let allItems = [];
+      let cart = JSON.parse(localStorage.getItem("se_cart") || "[]");
+      let activeItem = null;
+      let qty = 1;
+
+      const EMOJI = {
+        burger: "🍔",
+        pizza: "🍕",
+        sides: "🍟",
+        drink: "🥤",
+        dessert: "🍰",
+        general: "🍽️",
+      };
+
+      // ── Auth UI ────────────────────────────────────────────────────────────
+      const token = localStorage.getItem("se_token");
+      const user = JSON.parse(localStorage.getItem("se_user") || "null");
+      if (user) {
+        document.getElementById("nav-guest").style.display = "none";
+        document.getElementById("nav-user").style.display = "inline-flex";
+        document.getElementById("nav-username").textContent = user.username;
+        if (user.role === "admin")
+          document.getElementById("nav-admin").style.display = "block";
+        if (user.role === "member" || user.role === "admin")
+          document.getElementById("nav-orders").style.display = "block";
+      }
+
+      function logout() {
+        localStorage.removeItem("se_token");
+        localStorage.removeItem("se_user");
+        localStorage.removeItem("se_cart");
+        window.location.reload();
+      }
+
+      // ── Cart ───────────────────────────────────────────────────────────────
+      function updateCartBadge() {
+        const total = cart.reduce((s, i) => s + i.quantity, 0);
+        const el = document.getElementById("cart-count");
+        el.textContent = total;
+        el.style.display = total > 0 ? "flex" : "none";
+      }
+      function openCart() {
+        window.location.href = "orders.html";
+      }
+      updateCartBadge();
+
+      // ── Load menu from API ─────────────────────────────────────────────────
+      async function loadMenu(category = "all") {
+        const url =
+          category === "all" ? "/api/menu" : `/api/menu?category=${category}`;
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          allItems = data.items || [];
+          renderCards(allItems);
+        } catch {
+          document.getElementById("menuGrid").innerHTML =
+            '<p style="color:var(--muted);padding:2rem">Could not load menu. Make sure the server is running.</p>';
+        }
+      }
+
+      function renderCards(items) {
+        const grid = document.getElementById("menuGrid");
+        if (!items.length) {
+          grid.innerHTML =
+            '<p style="color:var(--muted);padding:2rem;grid-column:1/-1">No items in this category yet.</p>';
+          return;
+        }
+        grid.innerHTML = items
+          .map(
+            (item) => `
+      <div class="menu-card ${item.available ? "" : "unavailable-overlay"}" onclick="openModal(${JSON.stringify(item).replace(/"/g, "&quot;")})">
+        <div class="card-img">${EMOJI[item.category] || "🍽️"}</div>
+        <div class="card-body">
+          <div class="card-title">${item.name} ${!item.available ? '<span class="unavailable-tag">Unavailable</span>' : ""}</div>
+          <div class="card-desc">${item.description || "A delicious StackEats favourite."}</div>
+          <div class="card-footer-row">
+            <span class="price">$${item.price.toFixed(2)}</span>
+            <span class="category-badge">${item.category}</span>
+          </div>
+        </div>
+      </div>`,
+          )
+          .join("");
+      }
+
+      function filterMenu(cat, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadMenu(cat);
+      }
+
+      // ── Item modal ─────────────────────────────────────────────────────────
+      function openModal(item) {
+        if (!item.available) return;
+        activeItem = item;
+        qty = 1;
+        document.getElementById("modal-name").textContent = item.name;
+        document.getElementById("modal-desc").textContent =
+          item.description || "";
+        document.getElementById("modal-price").textContent =
+          `$${item.price.toFixed(2)}`;
+        document.getElementById("modal-cat").textContent = item.category;
+        document.getElementById("modal-qty").textContent = qty;
+        document.getElementById("modal-subtotal").textContent =
+          `Subtotal: $${item.price.toFixed(2)}`;
+        new bootstrap.Modal(document.getElementById("itemModal")).show();
+      }
+
+      function changeQty(delta) {
+        qty = Math.max(1, qty + delta);
+        document.getElementById("modal-qty").textContent = qty;
+        document.getElementById("modal-subtotal").textContent =
+          `Subtotal: $${(activeItem.price * qty).toFixed(2)}`;
+      }
+
+      function addToCart() {
+        if (!user) {
+          window.location.href = "login.html";
+          return;
+        }
+        const existing = cart.find((i) => i.menuItemId === activeItem.id);
+        if (existing) existing.quantity += qty;
+        else
+          cart.push({
+            menuItemId: activeItem.id,
+            name: activeItem.name,
+            price: activeItem.price,
+            quantity: qty,
+          });
+        localStorage.setItem("se_cart", JSON.stringify(cart));
+        updateCartBadge();
+        bootstrap.Modal.getInstance(
+          document.getElementById("itemModal"),
+        ).hide();
+        showToast(`${activeItem.name} added to cart!`);
+      }
+
+      function showToast(msg) {
+        document.getElementById("toastMsg").textContent = msg;
+        new bootstrap.Toast(document.getElementById("liveToast"), {
+          delay: 2500,
+        }).show();
+      }
+
+      loadMenu();
+    </script>
+  </body>
+</html>
